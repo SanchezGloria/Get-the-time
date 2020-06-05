@@ -1,0 +1,53 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  height: 100vh;
+  font-family: 'Montserrat', sans-serif;
+  color: rgb(16, 16, 17);
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.time {
+  font-size: 6rem;
+}
+
+.focus,
+.name {
+  outline: none;
+  border: 0;
+  background: transparent;
+  color: aliceblue;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.focus {
+  text-align: center;
+  font-size: 1.25em;
+}
+.name {
+  width: 6.6em;
+  font-size: 1em;
+}
+
+h1 {
+  margin-bottom: 3rem;
+}
+
+h2 {
+  margin-bottom: 0.5rem;
+  opacity: 0.6;
+}
+
+@media (min-width: 769px) {
+  .time {
+    font-size: 8rem;
+  }
+}
