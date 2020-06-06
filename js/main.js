@@ -1,11 +1,65 @@
 'use strict';
-import ls from './services/ls.js';
 
 // DOM Elements
 const time = document.querySelector('.time'),
   greeting = document.querySelector('.greeting'),
   name = document.querySelector('.name'),
   focus = document.querySelector('.focus');
+
+window.addEventListener('load', () => {
+  let long;
+  let lat;
+  let temperatureDescription = document.querySelector('.temperature-description');
+  let temperatureDegree = document.querySelector('.temperature-degree');
+  let locationTimezone = document.querySelector('.location-timezone');
+  let temperatureSection = document.querySelector('.temperature');
+  let temperatureSpan = document.querySelector('.temperature span');
+
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition((position) => {
+      console.log(position);
+      long = position.coords.longitude;
+      lat = position.coords.latitude;
+      const proxy = 'http://cors-anywhere.herokuapp.com/';
+      const api = `${proxy}https://api.darksky.net/forecast/fd9d9c6418c23d94745b836767721ad1/${lat},${long}`;
+      fetch(api)
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+          const { temperature, summary, icon } = data.currently;
+          // set DOM elements from API
+          temperatureDegree.textContent = temperature;
+          temperatureDescription.textContent = summary;
+          locationTimezone.textContent = data.timezone;
+          // formula for celsius
+          let celsius = (temperature - 32) * (5 / 9);
+          // set Icon
+          setIcons(icon, document.querySelector('.icon'));
+
+          // Change to Celsius
+          temperatureSection.addEventListener('click', () => {
+            if (temperatureSpan.textContent === ' °F') {
+              temperatureSpan.textContent = ' °C';
+              temperatureDegree.textContent = Math.floor(celsius);
+            } else {
+              temperatureSpan.textContent = ' °F';
+              temperatureDegree.textContent = temperature;
+            }
+          });
+        });
+    });
+  } else {
+    h1.textContent = 'hey this is not working';
+  }
+  function setIcons(icon, iconId) {
+    const skycons = new Skycons({
+      color: 'white',
+    });
+    const currentIcon = icon.replace(/-/g, '_').toUpperCase();
+    skycons.play();
+    return skycons.set(iconId, Skycons[currentIcon]);
+  }
+});
 
 // Options
 const showAmPm = true;
@@ -42,6 +96,7 @@ function setBgGreet() {
   if (hour < 12) {
     // Morning
     document.body.style.backgroundImage = "url('https://i.ibb.co/7vDLJFb/morning.jpg')";
+    document.body.style.backgroundSize = 'cover';
     greeting.textContent = 'Good Morning, ';
   } else if (hour < 18) {
     // Afternoon
@@ -100,22 +155,14 @@ function setFocus(e) {
   }
 }
 
-// const setFocusInLocalStorage = (ev) => {
-//   console.log(ev.currentTarget.value);
-
-//   localStorage.setItem('focus', ev.currentTarget.value);
-// };
-
-// getFromLocalStorage();
-
 name.addEventListener('keypress', setName);
 name.addEventListener('blur', setName);
 focus.addEventListener('keypress', setFocus);
 focus.addEventListener('blur', setFocus);
 
 // Run
+
 showTime();
 setBgGreet();
 getName();
 getFocus();
-// startApp();

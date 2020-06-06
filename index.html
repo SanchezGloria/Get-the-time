@@ -8,6 +8,19 @@
     <title>Document</title>
   </head>
   <body>
+    <div class="weather">
+      <div class="location">
+        <h1 class="location-timezone"></h1>
+        <canvas class="icon" width="128" height="128"></canvas>
+      </div>
+      <div class="temperature">
+        <div class="temperature-section">
+          <h2 class="temperature-degree"></h2>
+          <span> °F</span>
+        </div>
+        <div class="temperature-description"></div>
+      </div>
+    </div>
     <time class="time"></time>
     <h1>
       <span class="greeting"></span>
@@ -16,6 +29,7 @@
     <h2>What Is Your Focus For Today?</h2>
 
     <input type="text" class="focus" placeholder="Enter focus" value="" />
+    <script src="./images/skycons.js"></script>
     <script type="module" src="./js/main.js"></script>
   </body>
 </html>
