@@ -1,10 +1,11 @@
 'use strict';
+import ls from './services/ls.js';
 
 // DOM Elements
 const time = document.querySelector('.time'),
   greeting = document.querySelector('.greeting'),
-  name = document.querySelector('.name'),
-  focus = document.querySelector('.focus');
+  nameElement = document.querySelector('.name'),
+  focusElement = document.querySelector('.focus');
 
 window.addEventListener('load', () => {
   let long;
@@ -95,74 +96,58 @@ function setBgGreet() {
 
   if (hour < 12) {
     // Morning
-    document.body.style.backgroundImage = "url('https://i.ibb.co/7vDLJFb/morning.jpg')";
+    document.body.style.backgroundImage = 'url(./images/morning.jpg)';
     document.body.style.backgroundSize = 'cover';
     greeting.textContent = 'Good Morning, ';
   } else if (hour < 18) {
     // Afternoon
-    document.body.style.backgroundImage = 'url(../images/afternoon.jpg)';
+    document.body.style.backgroundImage = 'url(./images/afternoon.jpg)';
     document.body.style.backgroundSize = 'cover';
     greeting.textContent = 'Good Afternoon, ';
   } else {
     // Evening
-    document.body.style.backgroundImage = 'url(../images/night-sky.jpg)';
+    document.body.style.backgroundImage = 'url(./images/night-sky.jpg)';
     document.body.style.backgroundSize = 'cover';
     greeting.textContent = 'Good Evening, ';
     document.body.style.color = 'white';
   }
 }
 
-// Get Name
-function getName() {
-  if (localStorage.getItem('name') !== null) {
-    name.value = localStorage.getItem('name');
-  }
-}
+// Input object
+let data = { name: '', focus: '' };
 
-// Set Name
-function setName(e) {
-  if (e.type === 'keypress') {
-    // Make sure enter is pressed
-    if (e.which == 13 || e.keyCode == 13) {
-      localStorage.setItem('name', e.currentTarget.value);
-      name.blur();
-    }
+const startApp = () => {
+  if (ls.isValid()) {
+    data = ls.get();
+    nameElement.value = data.name;
+    focusElement.value = data.focus;
   } else {
-    localStorage.setItem('name', e.currentTarget.value);
+    ls.set(data);
   }
-}
+};
 
-// Get Focus
-function getFocus() {
-  if (localStorage.getItem('focus') !== null) {
-    focus.value = localStorage.getItem('focus');
-  }
-}
-
-// Set Focus
-function setFocus(e) {
-  console.log(e.currentTarget);
-  console.log(e.target.value);
-
+function handleInput(e) {
+  const { name, value } = e.currentTarget;
+  console.log(name);
+  console.log(value);
+  data[name] = value;
+  console.log('data', data);
   if (e.type === 'keypress') {
-    // Make sure enter is pressed
-    if (e.which == 13 || e.keyCode == 13) {
-      localStorage.setItem('focus', e.currentTarget.value);
-      focus.blur();
+    if (e.which === 13 || e.keyCode === 13) {
+      ls.set(data);
     }
-  } else {
-    localStorage.setItem('focus', e.currentTarget.value);
   }
 }
 
-name.addEventListener('keypress', setName);
-name.addEventListener('blur', setName);
-focus.addEventListener('keypress', setFocus);
-focus.addEventListener('blur', setFocus);
+// listeners
+
+nameElement.addEventListener('keypress', handleInput);
+nameElement.addEventListener('blur', handleInput);
+focusElement.addEventListener('keypress', handleInput);
+focusElement.addEventListener('blur', handleInput);
 
 // Run
 
 showTime();
 setBgGreet();
-getName();
-getFocus();
+startApp();
